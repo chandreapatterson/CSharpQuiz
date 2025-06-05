@@ -3,20 +3,31 @@ using System.Collections.Generic;
 
 class Program
 {
+    // Asks the user a question, displays multiple choice options, and checks the user's answer
     static bool AskQuestion(string question, List<string> choices, int answer)
     {
-        Console.WriteLine(question);
+        Console.WriteLine(question); // Display the question
+
+        // Display all available choices, numbered from 1
         for (int i = 0; i < choices.Count; i++)
         {
             Console.WriteLine($"{i + 1}. {choices[i]}");
         }
+
+        // Get the user's input
         Console.Write("Your answer: ");
         string userInput = Console.ReadLine();
+
+        // Compare the trimmed input with the correct answer (as string), return true if correct
         return userInput.Trim() == answer.ToString();
     }
 
     static void Main(string[] args)
     {
+        // Define a list of questions where each question is a dictionary with:
+        // - "q" (string): the question text
+        // - "choices" (List<string>): list of answer choices
+        // - "answer" (int): the correct choice number (1-based)
         var questions = new List<Dictionary<string, object>>
         {
             new Dictionary<string, object>
@@ -69,7 +80,7 @@ class Program
             }
         };
 
-        // Shuffle questions
+        // Shuffle the questions using the Fisher-Yates algorithm
         Random rng = new Random();
         for (int i = questions.Count - 1; i > 0; i--)
         {
@@ -79,17 +90,21 @@ class Program
             questions[j] = temp;
         }
 
-        int score = 0;
+        int score = 0; // Initialize user score
+
+        // Loop through each question in the shuffled list
         foreach (var q in questions)
         {
+            // Extract and cast the question components from the dictionary
             string questionText = (string)q["q"];
             var choices = (List<string>)q["choices"];
             int answer = (int)q["answer"];
 
+            // Ask the question and evaluate the answer
             if (AskQuestion(questionText, choices, answer))
             {
                 Console.WriteLine("Correct!\n");
-                score++;
+                score++; // Increment score for correct answer
             }
             else
             {
@@ -97,6 +112,7 @@ class Program
             }
         }
 
+        // Display the final score to the user
         Console.WriteLine($"Your score: {score}/{questions.Count}");
     }
 }
